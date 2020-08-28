@@ -42,10 +42,19 @@
     let sayCheese = new Cheese({
       stream: '#stream',
       canvas: '#render',
-      mode: 'photo'
+      mode: 'photo',
+      video: {
+        width: 720,
+        height: 720,
+        frameRate: 5
+      }
     });
 
     sayCheese.init();
+
+    sayCheese.log();
+
+    console.log(navigator.mediaDevices.getSupportedConstraints());
   </script>
 </body>
 
