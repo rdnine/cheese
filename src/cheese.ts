@@ -35,11 +35,15 @@ class Cheese implements Data {
       width: 1080,
       height: 1080,
       frameRate: 15,
-    }
+    },
   };
 
   constructor(settings: Settings) {
     this.stream = settings.stream;
     this.canvas = settings.canvas;
+  }
+
+  get(): void {
+    console.log(this);
   }
 }
