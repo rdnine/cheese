@@ -13,17 +13,30 @@ type Settings = {
 };
 
 interface Data {
-  stream: string;
-  canvas: string;
-  mode?: string;
+  stream: string
+  canvas: string
+  mode?: string
 
   constrains: {
     video: {
-      width: number;
-      height: number;
-      frameRate: number;
-    };
-  };
+      facingMode: string
+      width: {
+        min: number
+        ideal: number
+        max: number
+      }
+      height: {
+        min: number
+        ideal: number
+        max: number
+      }
+      frameRate: {
+        ideal: number
+        max: number
+      };
+      aspectRatio: number
+    }
+  }
 }
 
 class Cheese implements Data {
@@ -34,9 +47,21 @@ class Cheese implements Data {
   constrains = {
     video: {
       facingMode: 'user',
-      width: 1080,
-      height: 1080,
-      frameRate: 15,
+      width: {
+        min: 640,
+        ideal: 1080,
+        max: 1920
+      },
+      height: {
+        min: 640,
+        ideal: 1080,
+        max: 1920
+      },
+      frameRate: {
+        ideal: 30,
+        max: 60
+      },
+      aspectRatio: 1
     },
   };
 
@@ -45,8 +70,16 @@ class Cheese implements Data {
     this.canvas = settings.canvas;
 
     if('video' in settings) {
+      if('width' in settings.video) {
+        this.constrains.video.width.ideal = settings.video.width!;
+      }
+
+      if('height' in settings.video) {
+        this.constrains.video.height.ideal = settings.video.height!;
+      }
+
       if('frameRate' in settings.video) {
-        this.constrains.video.frameRate = settings.video.frameRate!;
+        this.constrains.video.frameRate.ideal = settings.video.frameRate!;
       }
     }
   }
