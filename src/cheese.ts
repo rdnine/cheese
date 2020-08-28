@@ -1,14 +1,14 @@
 type Settings = {
-  stream: string;
-  canvas: string;
-  mode?: string;
-  fps?: number;
+  stream: string
+  canvas: string
+  mode?: string
+  fps?: number
 
   video: {
-    format?: string;
-    width?: number;
-    height?: number;
-    frameRate?: number;
+    format: string
+    width: number
+    height: number
+    frameRate: number
   };
 };
 
@@ -17,7 +17,7 @@ interface Data {
   canvas: string
   mode?: string
 
-  constrains: {
+  constrains?: {
     video: {
       facingMode: string
       width: {
@@ -37,12 +37,13 @@ interface Data {
       aspectRatio: number
     }
   }
+
+  video__element: HTMLVideoElement
 }
 
 class Cheese implements Data {
   stream = "video";
   canvas = "canvas";
-  mode = "photo";
 
   constrains = {
     video: {
@@ -55,7 +56,7 @@ class Cheese implements Data {
       height: {
         min: 640,
         ideal: 1080,
-        max: 1920
+        max: 1080
       },
       frameRate: {
         ideal: 30,
@@ -65,8 +66,10 @@ class Cheese implements Data {
     },
   };
 
+  video__element: HTMLVideoElement;
+
   constructor(settings: Settings) {
-    this.stream = settings.stream;
+    this.video__element = document.querySelector<HTMLVideoElement>(settings.stream)!;
     this.canvas = settings.canvas;
 
     if('video' in settings) {
@@ -84,30 +87,28 @@ class Cheese implements Data {
     }
   }
 
-  async init(): Promise<any> {
+  async init(): Promise<void> {
     return new Promise((resolve, reject) => {
       /* GRAB VIDEO ELEMENT TO STREAM ON IT */
-      let video__element: any = document.querySelector(this.stream);
 
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {        
         navigator.mediaDevices
           .getUserMedia(this.constrains)
-          .then((stream) => {
-            video__element.srcObject = stream;
-            console.log(video__element.src);
-            video__element.play();
+          .then(stream => {
+            this.video__element.srcObject = stream;
+            this.video__element.play();
             resolve();
           })
-          .catch((err) => reject(`${err.name}: ${err.message}`));
+          .catch(err => reject(`${err.name}: ${err.message}`));
       } else if (navigator.getUserMedia) {        
         navigator.getUserMedia(
           { video: true },
-          (stream) => {
-            video__element.src = stream;
-            video__element.play();
+          stream => {
+            this.video__element.srcObject = stream;
+            this.video__element.play();
             resolve();
           },
-          (err) => {
+          err => {
             reject(err);
           }
         );
