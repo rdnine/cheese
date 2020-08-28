@@ -37,6 +37,16 @@
       <canvas id="render" class="hidden" width="1080" height="1080"></canvas>
     </div>
   </main>
+
+  <script>
+    let sayCheese = new Cheese({
+      stream: '#stream',
+      canvas: '#render',
+      mode: 'photo'
+    });
+
+    sayCheese.init();
+  </script>
 </body>
 
 </html>
