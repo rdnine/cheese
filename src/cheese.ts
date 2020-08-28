@@ -116,6 +116,18 @@ class Cheese implements Data {
     });
   }
 
+  stop(): void {
+    const stream: any = this.video__element.srcObject;
+    
+    const tracks = stream.getTracks();
+
+    tracks.forEach(function (track: any) {
+      track.stop();
+    });
+
+    this.video__element.srcObject = null;
+  }
+
   log(): void {
     console.log(this);
   }
