@@ -43,6 +43,37 @@ class Cheese implements Data {
     this.canvas = settings.canvas;
   }
 
+  async init(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      /* GRAB VIDEO ELEMENT TO STREAM ON IT */
+      let video__element: any = document.querySelector(this.stream);
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices
+          .getUserMedia(this.constrains)
+          .then((stream) => {
+            video__element.srcObject = stream;
+            console.log(video__element.src);
+            video__element.play();
+            resolve();
+          })
+          .catch((err) => reject(`${err.name}: ${err.message}`));
+      } else if (navigator.getUserMedia) {
+        navigator.getUserMedia(
+          { video: true },
+          (stream) => {
+            video__element.src = stream;
+            video__element.play();
+            resolve();
+          },
+          (err) => {
+            reject(err);
+          }
+        );
+      }
+    });
+  }
+
   get(): void {
     console.log(this);
   }
