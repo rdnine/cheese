@@ -11,7 +11,21 @@ type Settings = {
   }
 };
 
-class Cheese {
+interface Data {
+  stream: string;
+  canvas: string;
+  mode?: string;
+
+  constrains: {
+    video: {
+      width: number;
+      height: number;
+      frameRate: number;
+    };
+  };
+}
+
+class Cheese implements Data {
   stream = "video";
   canvas = "canvas";
   mode = "photo";
