@@ -39,6 +39,7 @@ class Cheese implements Data {
   };
 
   constructor(settings: Settings) {
-    console.log(settings);
+    this.stream = settings.stream;
+    this.canvas = settings.canvas;
   }
 }
