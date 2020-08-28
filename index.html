@@ -5,11 +5,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>TypeScript</title>
-  <script src="dist/app.js" defer></script>
+  <title>Say Cheese!</title>
+  <script src="dist/cheese.js"></script>
+
+  <style>
+    body {
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    .box {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background-color: #333;
+      padding: 30px;
+    }
+    #stream {
+      background-color: #666;
+    }
+  </style>
 </head>
 
 <body>
+  <main>
+    <div class="box">
+      <video id="stream" width="720" height="720" autoplay></video>
+      <canvas id="render" class="hidden" width="1080" height="1080"></canvas>
+    </div>
+  </main>
 </body>
 
 </html>

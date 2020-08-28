@@ -1,15 +1,18 @@
 {
-  "name": "base-typescript",
-  "version": "0.0.1-alpha",
-  "description": "A basic typescript project structure",
+  "name": "say-cheese",
+  "version": "0.0.2-alpha",
+  "description": "Webcam Controller and Snap Shot. Say Cheese!",
   "main": "app.js",
   "scripts": {
-    "build": "tsc src/app.ts",
-    "start": "lite-server"
+    "build": "tsc",
+    "watch": "tsc -w",
+    "serve": "lite-server"
   },
   "keywords": [
     "typescript",
-    "course"
+    "Webcam",
+    "Media",
+    "SnapShot"
   ],
   "author": "Rafael Duarte",
   "license": "MIT",
