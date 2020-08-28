@@ -2,13 +2,14 @@ type Settings = {
   stream: string;
   canvas: string;
   mode?: string;
-  fps?: Number;
+  fps?: number;
 
   video: {
     format?: string;
-    width?: Number;
-    height?: Number;
-  }
+    width?: number;
+    height?: number;
+    frameRate?: number;
+  };
 };
 
 interface Data {
@@ -32,6 +33,7 @@ class Cheese implements Data {
 
   constrains = {
     video: {
+      facingMode: 'user',
       width: 1080,
       height: 1080,
       frameRate: 15,
@@ -41,6 +43,12 @@ class Cheese implements Data {
   constructor(settings: Settings) {
     this.stream = settings.stream;
     this.canvas = settings.canvas;
+
+    if('video' in settings) {
+      if('frameRate' in settings.video) {
+        this.constrains.video.frameRate = settings.video.frameRate!;
+      }
+    }
   }
 
   async init(): Promise<any> {
@@ -48,7 +56,7 @@ class Cheese implements Data {
       /* GRAB VIDEO ELEMENT TO STREAM ON IT */
       let video__element: any = document.querySelector(this.stream);
 
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {        
         navigator.mediaDevices
           .getUserMedia(this.constrains)
           .then((stream) => {
@@ -58,7 +66,7 @@ class Cheese implements Data {
             resolve();
           })
           .catch((err) => reject(`${err.name}: ${err.message}`));
-      } else if (navigator.getUserMedia) {
+      } else if (navigator.getUserMedia) {        
         navigator.getUserMedia(
           { video: true },
           (stream) => {
@@ -74,7 +82,7 @@ class Cheese implements Data {
     });
   }
 
-  get(): void {
+  log(): void {
     console.log(this);
   }
 }
