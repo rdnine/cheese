@@ -41,7 +41,7 @@ var Cheese = (function () {
         this.canvas = "canvas";
         this.constrains = {
             video: {
-                facingMode: 'user',
+                facingMode: 'environment',
                 width: {
                     min: 640,
                     ideal: 1080,

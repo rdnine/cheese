@@ -47,7 +47,7 @@ class Cheese implements Data {
 
   constrains = {
     video: {
-      facingMode: 'user',
+      facingMode: 'environment',
       width: {
         min: 640,
         ideal: 1080,
