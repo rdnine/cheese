@@ -171,11 +171,10 @@
       });
 
       document.getElementById("snap").addEventListener('click', () => {
-        sayCheese.snap();
-
-        document.querySelector(".action").classList.remove("active");
-        document.querySelector(".snap_menu").classList.add("active");
-
+        if(sayCheese.snap()) {
+          document.querySelector(".action").classList.remove("active");
+          document.querySelector(".snap_menu").classList.add("active");
+        }
       });
 
       document.getElementById("again").addEventListener('click', () => {
