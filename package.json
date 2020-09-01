@@ -1,7 +1,7 @@
 {
   "name": "say-cheese",
   "version": "0.0.9-rc",
-  "description": "Webcam Controller and Snap Shot. Say Cheese!",
+  "description": "Webcam Controller and your browser Photographer. Say Cheese!",
   "main": "app.js",
   "scripts": {
     "build": "tsc",
