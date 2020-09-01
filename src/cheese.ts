@@ -166,6 +166,14 @@ class Cheese implements Data {
     this.target__element.classList.add('active');
   }
 
+  save(): void {
+    let a = document.createElement("a");
+    a.href = this.target__element.src;
+    a.download = "snap.jpg";
+    a.click();
+    a.remove();
+  }
+
   log(): void {
     console.log(this);
   }

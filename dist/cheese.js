@@ -135,6 +135,13 @@ var Cheese = (function () {
         this.target__element.src = this.pictures[this.pictures.length - 1];
         this.target__element.classList.add('active');
     };
+    Cheese.prototype.save = function () {
+        var a = document.createElement("a");
+        a.href = this.target__element.src;
+        a.download = "snap.jpg";
+        a.click();
+        a.remove();
+    };
     Cheese.prototype.log = function () {
         console.log(this);
     };
