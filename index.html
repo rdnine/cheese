@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Say Cheese! 🤳</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+
+  <script src="dist/cheese.js"></script>
+  <style>
+    body {
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      font-family: 'Lobster', cursive;
+      color: #fff;
+      font-size: 3.6rem;
+      margin-top: 0;
+    }
+
+    .btn {
+      font-family: 'Lobster', cursive;
+      font-size: 1.2rem;
+      border: 0;
+      border-radius: 0;
+      padding: 5px 25px;
+      transition: all ease 0.5s;
+      cursor: pointer;
+      margin-left: 15px;
+      margin-right: 15px;
+    }
+
+    .box {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background-color: #333;
+      padding: 15px;
+    }
+
+    .frame {
+      width: 720px;
+      height: 720px;
+      display: block;
+      position: relative;
+      background-color: #666;
+      box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.3);
+    }
+
+    .frame video {
+      object-position: center;
+      object-fit: cover;
+      position: relative;
+      z-index: 2;
+    }
+
+    .frame canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 1;
+      display: none;
+    }
+
+    .frame.flash {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      z-index: 4;
+      background-color: white;
+      opacity: 0;
+      transition: all ease 0.5;
+    }
+
+    .frame img {
+      width: 720px;
+      height: 720px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      z-index: 3;
+      transition: all ease 0.5s;
+    }
+
+    .frame img.active {
+      opacity: 1;
+    }
+
+    .action, .snap_menu {
+      margin-top: 30px;
+      margin-bottom: 30px;
+      display: none;
+    }
+
+    .action.active, .snap_menu.active {
+      display: block;
+    }
+
+    .action button {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="box">
+      <h1>Say Cheese</h1>
+      <div class="frame">
+        <video id="stream" width="720" height="720" autoplay></video>
+        <canvas id="render" class="hidden" width="720" height="720"></canvas>
+        <img id="target" src="" alt="">
+      </div>
+      <div class="action active">
+        <button id="start" class="btn">Start</button>
+        <button id="stop" class="btn">Stop</button>
+        <button id="snap" class="btn">Snap</button>
+      </div>
+      <div class="snap_menu">
+        <button id="again" class="btn">Take another Shot</button>
+        <button id="save" class="btn">Save Picture</button>
+      </div>
+    </div>
+  </main>
+  <script>
+    let sayCheese = new Cheese({
+        stream: '#stream',
+        canvas: '#render',
+        target: '#target',
+        video: {
+          width: 720,
+          height: 720,
+          frameRate: 5
+        }
+      });
+
+      document.getElementById("start").addEventListener('click', () => {
+        sayCheese.init();
+      });
+
+      document.getElementById("stop").addEventListener('click', () => {
+        sayCheese.stop();
+      });
+
+      document.getElementById("snap").addEventListener('click', () => {
+        sayCheese.snap();
+
+        document.querySelector(".action").classList.remove("active");
+        document.querySelector(".snap_menu").classList.add("active");
+
+      });
+
+      document.getElementById("again").addEventListener('click', () => {
+          sayCheese.clear();
+
+          document.getElementById("target").src = "";
+
+          document.querySelector(".snap_menu").classList.remove("active");
+          document.querySelector(".action").classList.add("active");
+
+        });
+
+      document.getElementById("save").addEventListener('click', () => {
+        sayCheese.save();
+      });
+  </script>
+</body>
+
+</html>
