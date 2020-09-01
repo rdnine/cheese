@@ -15,7 +15,7 @@ type Settings = {
 interface Data {
   stream: string
   canvas: string
-  mode?: string
+  target?: string
 
   constrains?: {
     video: {
@@ -43,11 +43,13 @@ interface Data {
 
   video__element: HTMLVideoElement
   canvas__element: HTMLCanvasElement
+  target__element: HTMLImageElement
 }
 
 class Cheese implements Data {
   stream = "video";
   canvas = "canvas";
+  target = "img";
 
   constrains = {
     video: {
@@ -73,12 +75,22 @@ class Cheese implements Data {
 
   pictures: string[] = [];
 
-  video__element: HTMLVideoElement;
-  canvas__element: HTMLCanvasElement;
+  video__element = document.querySelector<HTMLVideoElement>(this.stream)!;
+  canvas__element = document.querySelector<HTMLCanvasElement>(this.canvas)!;
+  target__element = document.querySelector<HTMLImageElement>(this.target)!;
 
   constructor(settings: Settings) {
-    this.video__element = document.querySelector<HTMLVideoElement>(settings.stream)!;
-    this.canvas__element = document.querySelector < HTMLCanvasElement>(settings.canvas)!;
+    if('stream' in settings) {
+      this.video__element = document.querySelector<HTMLVideoElement>(settings.stream)!;
+    }
+
+    if('canvas' in settings) {
+      this.canvas__element = document.querySelector<HTMLCanvasElement>(settings.canvas)!;
+    }
+
+    if ('target' in settings) {
+      //this.target__element = document.querySelector<HTMLImageElement>(settings.target)!;
+    }
 
     if('video' in settings) {
       if('width' in settings.video) {
@@ -143,12 +155,15 @@ class Cheese implements Data {
 
   snap(): void {
     let context = this.canvas__element.getContext("2d") as CanvasRenderingContext2D;
-    console.log(this.video__element.videoHeight);
     console.log(this.video__element.videoWidth);
     
-    context.drawImage(this.video__element, (this.video__element.videoWidth - this.canvas__element.width) / 2, 0, this.canvas__element.height, this.canvas__element.width, 0, 0, this.canvas__element.width, this.canvas__element.height)
+    context.drawImage(this.video__element, (this.video__element.videoWidth - this.canvas__element.width) / 2, 0, this.canvas__element.height, this.canvas__element.width, 0, 0, this.canvas__element.width, this.canvas__element.height);
 
     this.pictures[this.pictures.length] = this.canvas__element.toDataURL('image/jpeg', 1);
+    
+    this.target__element.src = this.pictures [this.pictures.length - 1];
+
+    this.target__element.classList.add('active');
   }
 
   log(): void {

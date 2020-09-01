@@ -54,10 +54,25 @@
       right: 0;
       bottom: 0;
       top: 0;
-      z-index: 3;
+      z-index: 4;
       background-color: white;
       opacity: 0;
       transition: all ease 0.5;
+    }
+
+    .frame img {
+      width: 720px;
+      height: 720px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      z-index: 3;
+      transition: all ease 0.5s;
+    }
+
+    .frame img.active {
+      opacity: 1;
     }
 
     .action {
@@ -78,9 +93,7 @@
       <div class="frame">
         <video id="stream" width="720" height="720" autoplay></video>
         <canvas id="render" class="hidden" width="720" height="720"></canvas>
-        <div id="target">
-          <img src="" alt="">
-        </div>
+        <img id="target" src="" alt="">
       </div>
       <div class="action">
         <button id="start" class="btn">Start</button>

@@ -39,6 +39,7 @@ var Cheese = (function () {
     function Cheese(settings) {
         this.stream = "video";
         this.canvas = "canvas";
+        this.target = "img";
         this.constrains = {
             video: {
                 facingMode: 'environment',
@@ -61,8 +62,17 @@ var Cheese = (function () {
             audio: false
         };
         this.pictures = [];
-        this.video__element = document.querySelector(settings.stream);
-        this.canvas__element = document.querySelector(settings.canvas);
+        this.video__element = document.querySelector(this.stream);
+        this.canvas__element = document.querySelector(this.canvas);
+        this.target__element = document.querySelector(this.target);
+        if ('stream' in settings) {
+            this.video__element = document.querySelector(settings.stream);
+        }
+        if ('canvas' in settings) {
+            this.canvas__element = document.querySelector(settings.canvas);
+        }
+        if ('target' in settings) {
+        }
         if ('video' in settings) {
             if ('width' in settings.video) {
                 this.constrains.video.width.ideal = settings.video.width;
@@ -119,10 +129,11 @@ var Cheese = (function () {
     };
     Cheese.prototype.snap = function () {
         var context = this.canvas__element.getContext("2d");
-        console.log(this.video__element.videoHeight);
         console.log(this.video__element.videoWidth);
         context.drawImage(this.video__element, (this.video__element.videoWidth - this.canvas__element.width) / 2, 0, this.canvas__element.height, this.canvas__element.width, 0, 0, this.canvas__element.width, this.canvas__element.height);
         this.pictures[this.pictures.length] = this.canvas__element.toDataURL('image/jpeg', 1);
+        this.target__element.src = this.pictures[this.pictures.length - 1];
+        this.target__element.classList.add('active');
     };
     Cheese.prototype.log = function () {
         console.log(this);

@@ -1,6 +1,7 @@
 let sayCheese = new Cheese({
   stream: '#stream',
   canvas: '#render',
+  target: '#target',
   video: {
     width: 720,
     height: 720,
