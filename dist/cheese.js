@@ -40,6 +40,7 @@ var Cheese = (function () {
         this.stream = "video";
         this.canvas = "canvas";
         this.target = "img";
+        this.active = false;
         this.constrains = {
             video: {
                 facingMode: "environment",
@@ -90,30 +91,37 @@ var Cheese = (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 return [2, new Promise(function (resolve, reject) {
-                        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                            navigator.mediaDevices
-                                .getUserMedia(_this.constrains)
-                                .then(function (stream) {
-                                _this.video__element.srcObject = stream;
-                                _this.video__element.play();
-                                resolve();
-                            })
-                                .catch(function (err) {
-                                reject(err.name + ": " + err.message);
-                                alert("No device found. Check the logs for error!");
-                            });
-                        }
-                        else if (navigator.getUserMedia) {
-                            navigator.getUserMedia({ video: true }, function (stream) {
-                                _this.video__element.srcObject = stream;
-                                _this.video__element.play();
-                                resolve();
-                            }, function (err) {
-                                reject(err);
-                            });
+                        if (!_this.active) {
+                            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                                navigator.mediaDevices
+                                    .getUserMedia(_this.constrains)
+                                    .then(function (stream) {
+                                    _this.video__element.srcObject = stream;
+                                    _this.video__element.play();
+                                    _this.active = true;
+                                    resolve();
+                                })
+                                    .catch(function (err) {
+                                    reject(err.name + ": " + err.message);
+                                    alert("No device found. Check the logs for error!");
+                                });
+                            }
+                            else if (navigator.getUserMedia) {
+                                navigator.getUserMedia({ video: true }, function (stream) {
+                                    _this.video__element.srcObject = stream;
+                                    _this.video__element.play();
+                                    _this.active = true;
+                                    resolve();
+                                }, function (err) {
+                                    reject(err);
+                                });
+                            }
+                            else {
+                                throw new Error("Your browser is not supported");
+                            }
                         }
                         else {
-                            throw new Error("Your browser is not supported");
+                            alert("Webcam already active");
                         }
                     })];
             });
@@ -121,26 +129,39 @@ var Cheese = (function () {
     };
     Cheese.prototype.stop = function () {
         var stream = this.video__element.srcObject;
-        var tracks = stream.getTracks();
-        tracks.forEach(function (track) {
-            track.stop();
-        });
-        this.video__element.srcObject = null;
+        if (this.active) {
+            var tracks = stream.getTracks();
+            tracks.forEach(function (track) {
+                track.stop();
+            });
+            this.video__element.srcObject = null;
+        }
+        else {
+            alert("Can't stop what hasn't started!");
+        }
     };
     Cheese.prototype.snap = function () {
-        var context = this.canvas__element.getContext("2d");
-        console.log(this.video__element.videoWidth);
-        context.drawImage(this.video__element, (this.video__element.videoWidth - this.canvas__element.width) / 2, 0, this.canvas__element.height, this.canvas__element.width, 0, 0, this.canvas__element.width, this.canvas__element.height);
-        this.pictures[this.pictures.length] = this.canvas__element.toDataURL("image/jpeg", 1);
-        this.target__element.src = this.pictures[this.pictures.length - 1];
-        this.target__element.classList.add("active");
+        if (this.active) {
+            var context = this.canvas__element.getContext("2d");
+            context.drawImage(this.video__element, (this.video__element.videoWidth - this.canvas__element.width) / 2, 0, this.canvas__element.height, this.canvas__element.width, 0, 0, this.canvas__element.width, this.canvas__element.height);
+            this.pictures[this.pictures.length] = this.canvas__element.toDataURL("image/jpeg", 1);
+            this.target__element.src = this.pictures[this.pictures.length - 1];
+            this.target__element.classList.add("active");
+            return true;
+        }
+        else {
+            alert("Webcam not active!");
+            return false;
+        }
     };
     Cheese.prototype.save = function () {
-        var a = document.createElement("a");
-        a.href = this.target__element.src;
-        a.download = "snap.jpg";
-        a.click();
-        a.remove();
+        if (this.active) {
+            var a = document.createElement("a");
+            a.href = this.target__element.src;
+            a.download = "snap.jpg";
+            a.click();
+            a.remove();
+        }
     };
     Cheese.prototype.clear = function () {
         this.pictures = [];

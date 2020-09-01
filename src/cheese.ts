@@ -36,6 +36,7 @@ interface Data {
   stream: string
   canvas: string
   target?: string
+  active: boolean
 
   constrains?: {
     video: {
@@ -70,6 +71,7 @@ class Cheese implements Data {
   stream = "video"; // Video Stream. Usually a video HTML tag
   canvas = "canvas"; // Canvas HTML tag to draw the image on Snap
   target = "img"; // Target HTML image tag to show the Snap
+  active = false; // Defines if the Streaming Source is active
 
   // Constrains to be delivered to getUserMedia
   constrains = {
@@ -148,35 +150,39 @@ class Cheese implements Data {
    */
 
   async init(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      /* GRAB VIDEO ELEMENT TO STREAM ON IT */
-
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices
-          .getUserMedia(this.constrains)
-          .then((stream) => {
-            this.video__element.srcObject = stream;
-            this.video__element.play();
-            resolve();
-          })
-          .catch((err) => {
-            reject(`${err.name}: ${err.message}`);
-            alert(`No device found. Check the logs for error!`);
-          });
-      } else if (navigator.getUserMedia) {
-        navigator.getUserMedia(
-          { video: true },
-          (stream) => {
-            this.video__element.srcObject = stream;
-            this.video__element.play();
-            resolve();
-          },
-          (err) => {
-            reject(err);
-          }
-        );
+    return new Promise((resolve, reject) => {      
+      if (!this.active) {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          navigator.mediaDevices
+            .getUserMedia(this.constrains)
+            .then((stream) => {
+              this.video__element.srcObject = stream;
+              this.video__element.play();
+              this.active = true;
+              resolve();
+            })
+            .catch((err) => {
+              reject(`${err.name}: ${err.message}`);
+              alert(`No device found. Check the logs for error!`);
+            });
+        } else if (navigator.getUserMedia) {
+          navigator.getUserMedia(
+            { video: true },
+            (stream) => {
+              this.video__element.srcObject = stream;
+              this.video__element.play();
+              this.active = true;
+              resolve();
+            },
+            (err) => {
+              reject(err);
+            }
+          );
+        } else {
+          throw new Error("Your browser is not supported");
+        }
       } else {
-        throw new Error("Your browser is not supported");
+        alert("Webcam already active");
       }
     });
   }
@@ -189,14 +195,18 @@ class Cheese implements Data {
 
   stop(): void {
     const stream: any = this.video__element.srcObject;
-
-    const tracks = stream.getTracks();
-
-    tracks.forEach(function (track: any) {
-      track.stop();
-    });
-
-    this.video__element.srcObject = null;
+    
+    if (this.active) {
+      const tracks = stream.getTracks();
+  
+      tracks.forEach(function (track: any) {
+        track.stop();
+      });
+  
+      this.video__element.srcObject = null;
+    } else {
+      alert("Can't stop what hasn't started!");
+    }
   }
 
   /**
@@ -205,32 +215,38 @@ class Cheese implements Data {
    * @returns void
    */
 
-  snap(): void {
-    let context = this.canvas__element.getContext(
-      "2d"
-    ) as CanvasRenderingContext2D;
-    console.log(this.video__element.videoWidth);
+  snap(): boolean {
+    if (this.active) {
+      let context = this.canvas__element.getContext(
+        "2d"
+      ) as CanvasRenderingContext2D;
 
-    context.drawImage(
-      this.video__element,
-      (this.video__element.videoWidth - this.canvas__element.width) / 2,
-      0,
-      this.canvas__element.height,
-      this.canvas__element.width,
-      0,
-      0,
-      this.canvas__element.width,
-      this.canvas__element.height
-    );
+      context.drawImage(
+        this.video__element,
+        (this.video__element.videoWidth - this.canvas__element.width) / 2,
+        0,
+        this.canvas__element.height,
+        this.canvas__element.width,
+        0,
+        0,
+        this.canvas__element.width,
+        this.canvas__element.height
+      );
 
-    this.pictures[this.pictures.length] = this.canvas__element.toDataURL(
-      "image/jpeg",
-      1
-    );
+      this.pictures[this.pictures.length] = this.canvas__element.toDataURL(
+        "image/jpeg",
+        1
+      );
 
-    this.target__element.src = this.pictures[this.pictures.length - 1];
+      this.target__element.src = this.pictures[this.pictures.length - 1];
 
-    this.target__element.classList.add("active");
+      this.target__element.classList.add("active");
+
+      return true;
+    } else {
+      alert("Webcam not active!");
+      return false;
+    }
   }
 
   /**
@@ -240,11 +256,13 @@ class Cheese implements Data {
    */
 
   save(): void {
-    let a = document.createElement("a");
-    a.href = this.target__element.src;
-    a.download = "snap.jpg";
-    a.click();
-    a.remove();
+    if(this.active) {
+      let a = document.createElement("a");
+      a.href = this.target__element.src;
+      a.download = "snap.jpg";
+      a.click();
+      a.remove();
+    }
   }
 
   /**
