@@ -1,6 +1,6 @@
 {
   "name": "say-cheese",
-  "version": "0.0.7-beta",
+  "version": "0.0.9-rc",
   "description": "Webcam Controller and Snap Shot. Say Cheese!",
   "main": "app.js",
   "scripts": {
