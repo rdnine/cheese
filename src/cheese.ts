@@ -174,6 +174,10 @@ class Cheese implements Data {
     a.remove();
   }
 
+  clear(): void {
+    this.pictures = [];
+  }
+
   log(): void {
     console.log(this);
   }

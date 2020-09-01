@@ -142,6 +142,9 @@ var Cheese = (function () {
         a.click();
         a.remove();
     };
+    Cheese.prototype.clear = function () {
+        this.pictures = [];
+    };
     Cheese.prototype.log = function () {
         console.log(this);
     };
