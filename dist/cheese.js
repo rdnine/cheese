@@ -42,45 +42,45 @@ var Cheese = (function () {
         this.target = "img";
         this.constrains = {
             video: {
-                facingMode: 'environment',
+                facingMode: "environment",
                 width: {
                     min: 640,
                     ideal: 1080,
-                    max: 1920
+                    max: 1920,
                 },
                 height: {
                     min: 640,
                     ideal: 1080,
-                    max: 1080
+                    max: 1080,
                 },
                 frameRate: {
                     ideal: 30,
-                    max: 60
+                    max: 60,
                 },
-                aspectRatio: 1
+                aspectRatio: 1,
             },
-            audio: false
+            audio: false,
         };
         this.pictures = [];
         this.video__element = document.querySelector(this.stream);
         this.canvas__element = document.querySelector(this.canvas);
         this.target__element = document.querySelector(this.target);
-        if ('stream' in settings) {
+        if ("stream" in settings) {
             this.video__element = document.querySelector(settings.stream);
         }
-        if ('canvas' in settings) {
+        if ("canvas" in settings) {
             this.canvas__element = document.querySelector(settings.canvas);
         }
-        if ('target' in settings) {
+        if ("target" in settings) {
         }
-        if ('video' in settings) {
-            if ('width' in settings.video) {
+        if ("video" in settings) {
+            if ("width" in settings.video) {
                 this.constrains.video.width.ideal = settings.video.width;
             }
-            if ('height' in settings.video) {
+            if ("height" in settings.video) {
                 this.constrains.video.height.ideal = settings.video.height;
             }
-            if ('frameRate' in settings.video) {
+            if ("frameRate" in settings.video) {
                 this.constrains.video.frameRate.ideal = settings.video.frameRate;
             }
         }
@@ -113,7 +113,7 @@ var Cheese = (function () {
                             });
                         }
                         else {
-                            throw new Error('Your browser is not supported');
+                            throw new Error("Your browser is not supported");
                         }
                     })];
             });
@@ -131,9 +131,9 @@ var Cheese = (function () {
         var context = this.canvas__element.getContext("2d");
         console.log(this.video__element.videoWidth);
         context.drawImage(this.video__element, (this.video__element.videoWidth - this.canvas__element.width) / 2, 0, this.canvas__element.height, this.canvas__element.width, 0, 0, this.canvas__element.width, this.canvas__element.height);
-        this.pictures[this.pictures.length] = this.canvas__element.toDataURL('image/jpeg', 1);
+        this.pictures[this.pictures.length] = this.canvas__element.toDataURL("image/jpeg", 1);
         this.target__element.src = this.pictures[this.pictures.length - 1];
-        this.target__element.classList.add('active');
+        this.target__element.classList.add("active");
     };
     Cheese.prototype.save = function () {
         var a = document.createElement("a");
