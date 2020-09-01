@@ -35,8 +35,11 @@ interface Data {
         max: number
       };
       aspectRatio: number
-    }
+    },
+    audio: boolean
   }
+
+  pictures: string[]
 
   video__element: HTMLVideoElement
 }
@@ -64,7 +67,10 @@ class Cheese implements Data {
       },
       aspectRatio: 1
     },
+    audio: false
   };
+
+  pictures: string[] = [];
 
   video__element: HTMLVideoElement;
 
@@ -95,12 +101,17 @@ class Cheese implements Data {
         navigator.mediaDevices
           .getUserMedia(this.constrains)
           .then(stream => {
+            console.log("here");
+            
             this.video__element.srcObject = stream;
             this.video__element.play();
             resolve();
           })
-          .catch(err => reject(`${err.name}: ${err.message}`));
-      } else if (navigator.getUserMedia) {        
+          .catch(err => {
+            reject(`${err.name}: ${err.message}`);
+            alert(`No device found. Check the logs for error!`);
+          });
+      } else if (navigator.getUserMedia) {      
         navigator.getUserMedia(
           { video: true },
           stream => {
@@ -112,6 +123,8 @@ class Cheese implements Data {
             reject(err);
           }
         );
+      } else {
+        throw new Error('Your browser is not supported');
       }
     });
   }
