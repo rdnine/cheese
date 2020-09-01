@@ -58,9 +58,11 @@ var Cheese = (function () {
                 },
                 aspectRatio: 1
             },
+            audio: false
         };
+        this.pictures = [];
         this.video__element = document.querySelector(settings.stream);
-        this.canvas = settings.canvas;
+        this.canvas__element = document.querySelector(settings.canvas);
         if ('video' in settings) {
             if ('width' in settings.video) {
                 this.constrains.video.width.ideal = settings.video.width;
@@ -86,7 +88,10 @@ var Cheese = (function () {
                                 _this.video__element.play();
                                 resolve();
                             })
-                                .catch(function (err) { return reject(err.name + ": " + err.message); });
+                                .catch(function (err) {
+                                reject(err.name + ": " + err.message);
+                                alert("No device found. Check the logs for error!");
+                            });
                         }
                         else if (navigator.getUserMedia) {
                             navigator.getUserMedia({ video: true }, function (stream) {
@@ -96,6 +101,9 @@ var Cheese = (function () {
                             }, function (err) {
                                 reject(err);
                             });
+                        }
+                        else {
+                            throw new Error('Your browser is not supported');
                         }
                     })];
             });
@@ -108,6 +116,13 @@ var Cheese = (function () {
             track.stop();
         });
         this.video__element.srcObject = null;
+    };
+    Cheese.prototype.snap = function () {
+        var context = this.canvas__element.getContext("2d");
+        console.log(this.video__element.videoHeight);
+        console.log(this.video__element.videoWidth);
+        context.drawImage(this.video__element, (this.video__element.videoWidth - this.canvas__element.width) / 2, 0, this.canvas__element.height, this.canvas__element.width, 0, 0, this.canvas__element.width, this.canvas__element.height);
+        this.pictures[this.pictures.length] = this.canvas__element.toDataURL('image/jpeg', 1);
     };
     Cheese.prototype.log = function () {
         console.log(this);

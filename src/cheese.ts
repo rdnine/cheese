@@ -42,6 +42,7 @@ interface Data {
   pictures: string[]
 
   video__element: HTMLVideoElement
+  canvas__element: HTMLCanvasElement
 }
 
 class Cheese implements Data {
@@ -73,10 +74,11 @@ class Cheese implements Data {
   pictures: string[] = [];
 
   video__element: HTMLVideoElement;
+  canvas__element: HTMLCanvasElement;
 
   constructor(settings: Settings) {
     this.video__element = document.querySelector<HTMLVideoElement>(settings.stream)!;
-    this.canvas = settings.canvas;
+    this.canvas__element = document.querySelector < HTMLCanvasElement>(settings.canvas)!;
 
     if('video' in settings) {
       if('width' in settings.video) {
@@ -100,9 +102,7 @@ class Cheese implements Data {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {        
         navigator.mediaDevices
           .getUserMedia(this.constrains)
-          .then(stream => {
-            console.log("here");
-            
+          .then(stream => {            
             this.video__element.srcObject = stream;
             this.video__element.play();
             resolve();
@@ -139,6 +139,16 @@ class Cheese implements Data {
     });
 
     this.video__element.srcObject = null;
+  }
+
+  snap(): void {
+    let context = this.canvas__element.getContext("2d") as CanvasRenderingContext2D;
+    console.log(this.video__element.videoHeight);
+    console.log(this.video__element.videoWidth);
+    
+    context.drawImage(this.video__element, (this.video__element.videoWidth - this.canvas__element.width) / 2, 0, this.canvas__element.height, this.canvas__element.width, 0, 0, this.canvas__element.width, this.canvas__element.height)
+
+    this.pictures[this.pictures.length] = this.canvas__element.toDataURL('image/jpeg', 1);
   }
 
   log(): void {

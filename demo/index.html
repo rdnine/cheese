@@ -45,6 +45,7 @@
       left: 0;
       top: 0;
       z-index: 1;
+      display: none;
     }
 
     .frame.flash {
@@ -77,12 +78,15 @@
       <div class="frame">
         <video id="stream" width="720" height="720" autoplay></video>
         <canvas id="render" class="hidden" width="720" height="720"></canvas>
-        <div class="flash"></div>
+        <div id="target">
+          <img src="" alt="">
+        </div>
       </div>
       <div class="action">
         <button id="start" class="btn">Start</button>
         <button id="log" class="btn">Log</button>
         <button id="stop" class="btn">Stop</button>
+        <button id="snap" class="btn">snap</button>
       </div>
     </div>
   </main>

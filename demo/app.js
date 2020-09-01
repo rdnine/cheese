@@ -4,7 +4,7 @@ let sayCheese = new Cheese({
   video: {
     width: 720,
     height: 720,
-    frameRate: 30
+    frameRate: 5
   }
 });
 
@@ -18,4 +18,7 @@ document.getElementById("log").addEventListener('click', () => {
 
 document.getElementById("stop").addEventListener('click', () => {
   sayCheese.stop();
+});
+document.getElementById("snap").addEventListener('click', () => {
+  sayCheese.snap();
 });
